@@ -1,0 +1,59 @@
+{
+    "builders": [
+        {
+            "name": "Ubuntu-22.04",
+            "type": "vmware-iso",
+            "vm_name": "Ubuntu-22.04",
+            "guest_os_type": "ubuntu-64",
+            "tools_upload_flavor": "linux",
+            "headless": false,
+            "vnc_over_websocket": true,
+            "insecure_connection": true,
+            "iso_urls": [
+                "https://releases.ubuntu.com/22.04.1/ubuntu-22.04.1-live-server-amd64.iso"
+            ],
+            "iso_checksum": "10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb",
+            "cpus": 2,
+            "memory": 4096,
+            "disk_size": 20140,
+            "network": "hostonly",
+            "http_directory": "http",
+            "boot_wait": "5s",
+            "boot_command": [
+                "c",
+                "linux /casper/vmlinuz --- autoinstall ds='nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/' ",
+                "<enter><wait>",
+                "initrd /casper/initrd<enter><wait>",
+                "boot<enter>"
+            ],
+            "network_name": "VM Network",
+            "vmx_data": {
+                "ethernet0.networkName": "VM Network",
+                "ethernet0.startConnected": "TRUE",
+                "ethernet0.present": "true"
+            },
+            "ssh_username": "ubuntu",
+            "ssh_password": "ubuntu",
+            "ssh_port": 22,
+            "ssh_wait_timeout": "20m",
+            "shutdown_command": "echo 'shutdown -P now' > shutdown.sh; echo 'ubuntu'|sudo -S sh 'shutdown.sh'",
+            "vnc_disable_password": true,
+            "format": "vmx",
+            "remote_type": "esx5",
+            "remote_host": "{{user `esxi_host`}}",
+            "remote_datastore": "{{user `esxi_datastore`}}",
+            "remote_username": "{{user `esxi_username`}}",
+            "remote_password": "{{user `esxi_password`}}",
+            "keep_registered": true,
+            "skip_export": true
+        }
+    ],
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [
+                "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done"
+            ]
+        }
+    ]
+}

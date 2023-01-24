@@ -1,0 +1,21 @@
+#cloud-config
+autoinstall:
+  version: 1
+  early-commands:
+    - systemctl stop ssh
+  identity:
+    hostname: ubuntu-server
+    password: "$6$1zhkQiLIC9cCWQi.$v01vhUomsm3Bfn67yFXy1RyitSLlRiF9rsXvSAhy/bRFArnUe1w8/QFG5OVj0lDISRQ24Bcw1z/9dS7mQ2hnp."
+    username: ubuntu
+  locale: en_US
+  update: true
+  keyboard:
+    layout: us
+  ssh:
+    install-server: true
+    allow-pw: true
+  storage:
+    layout:
+      name: direct
+    swap:
+      size: 0
