@@ -3,7 +3,7 @@
         {
             "name": "Ubuntu-22.04",
             "type": "vmware-iso",
-            "vm_name": "Ubuntu-22.04",
+            "vm_name": "Ubuntu-22.04-ansible",
             "guest_os_type": "ubuntu-64",
             "tools_upload_flavor": "linux",
             "headless": false,
@@ -44,8 +44,9 @@
             "remote_datastore": "{{user `esxi_datastore`}}",
             "remote_username": "{{user `esxi_username`}}",
             "remote_password": "{{user `esxi_password`}}",
-            "keep_registered": true,
+            "keep_registered": false,
             "skip_export": true
+            
         }
     ],
     "provisioners": [
@@ -54,6 +55,11 @@
             "inline": [
                 "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done"
             ]
+        },
+        {
+            "type": "ansible",
+            "galaxy_file": "./ansible/requirements.yml",
+            "playbook_file": "./ansible/playbook.yml"
         }
     ]
 }

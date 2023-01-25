@@ -19,3 +19,5 @@ autoinstall:
       name: direct
     swap:
       size: 0
+  late-commands:
+    - echo 'ubuntu ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
